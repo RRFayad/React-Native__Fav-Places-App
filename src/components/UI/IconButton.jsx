@@ -8,7 +8,7 @@ function IconButton({ icon, size, color, onPress: pressHandler }) {
         name={icon}
         size={size}
         color={color}
-        className="m-1 items-center justify-center p-2 active:opacity-70"
+        className=" items-center justify-center p-2 active:opacity-70"
       />
     </Pressable>
   );

@@ -6,7 +6,9 @@ function PlacesList({ places }) {
     <>
       {(!places || places.length === 0) && (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-base">No Places Added Yet!</Text>
+          <Text className="text-primary-200 text-base">
+            No Places Added Yet!
+          </Text>
         </View>
       )}
       {places && places.length > 0 && (
