@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Alert, Image, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from "@react-navigation/native";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
@@ -12,8 +16,25 @@ import { getMapPreview } from "../../../util/location";
 
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState(null);
+  const isFocused = useIsFocused(); // As the screens stack over each other, we use this hook to update
+
   const navigation = useNavigation();
+  const route = useRoute();
+
   const [permissionInfo, requestPermission] = useForegroundPermissions();
+
+  // console.log(mapPickedLocation);
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      // Case when we come from the map with a picked location
+      const mapPickedLocation = route.params.pickedLocation;
+      setPickedLocation({
+        lat: mapPickedLocation.latitude,
+        lng: mapPickedLocation.longitude,
+      });
+    }
+  }, [route, isFocused]);
 
   const verifyPermission = async () => {
     if (permissionInfo.status === PermissionStatus.UNDETERMINED) {
