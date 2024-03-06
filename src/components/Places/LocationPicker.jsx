@@ -14,7 +14,7 @@ import {
 import OutlinedButton from "../UI/OutlinedButton";
 import { getMapPreview } from "../../../util/location";
 
-function LocationPicker() {
+function LocationPicker({ onPickLocation }) {
   const [pickedLocation, setPickedLocation] = useState(null);
   const isFocused = useIsFocused(); // As the screens stack over each other, we use this hook to update
 
@@ -35,6 +35,10 @@ function LocationPicker() {
       });
     }
   }, [route, isFocused]);
+
+  useEffect(() => {
+    onPickLocation(pickedLocation);
+  }, [pickedLocation]);
 
   const verifyPermission = async () => {
     if (permissionInfo.status === PermissionStatus.UNDETERMINED) {

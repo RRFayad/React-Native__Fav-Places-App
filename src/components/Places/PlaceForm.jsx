@@ -3,9 +3,19 @@ import { View, Text, ScrollView, TextInput } from "react-native";
 
 import ImagePicker from "./ImagePicker";
 import LocationPicker from "./LocationPicker";
+import CustomButton from "../UI/CustomButton";
 
 function PlaceForm() {
   const [enteredTitle, setEnteredTitle] = useState("");
+  const [selectedImage, setSelectedImage] = useState();
+  const [pickedLocation, setPickedLocation] = useState();
+
+  const savePlaceHandler = () => {
+    console.log(enteredTitle);
+    console.log(selectedImage);
+    console.log(pickedLocation);
+  };
+
   return (
     <ScrollView className="flex-1 p-6">
       <View>
@@ -15,8 +25,11 @@ function PlaceForm() {
           onChangeText={(enteredText) => setEnteredTitle(enteredText)}
         />
       </View>
-      <ImagePicker />
-      <LocationPicker />
+      <ImagePicker onTakeImage={(imageUri) => setSelectedImage(imageUri)} />
+      <LocationPicker
+        onPickLocation={(location) => setPickedLocation(location)}
+      />
+      <CustomButton onPress={savePlaceHandler}>Add Place</CustomButton>
     </ScrollView>
   );
 }
