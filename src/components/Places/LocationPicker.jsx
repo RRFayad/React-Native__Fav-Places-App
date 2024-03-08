@@ -12,7 +12,7 @@ import {
 } from "expo-location";
 
 import OutlinedButton from "../UI/OutlinedButton";
-import { getMapPreview } from "../../../util/location";
+import { getAddress, getMapPreview } from "../../../util/location";
 
 function LocationPicker({ onPickLocation }) {
   const [pickedLocation, setPickedLocation] = useState(null);
@@ -37,7 +37,17 @@ function LocationPicker({ onPickLocation }) {
   }, [route, isFocused]);
 
   useEffect(() => {
-    onPickLocation(pickedLocation);
+    const getPickedLocationAddress = async () => {
+      if (pickedLocation) {
+        const address = await getAddress(
+          process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+          pickedLocation.lat,
+          pickedLocation.lng,
+        );
+        onPickLocation({ ...pickedLocation, address });
+      }
+    };
+    getPickedLocationAddress();
   }, [pickedLocation]);
 
   const verifyPermission = async () => {

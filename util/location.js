@@ -3,3 +3,15 @@ export const getMapPreview = (apiKey, lat, lng) => {
 
   return imagePreviewURL;
 };
+
+export const getAddress = async (apiKey, lat, lng) => {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch address!");
+  }
+  const data = await response.json();
+  const address = data.results[0].formatted_address;
+  return address;
+};
