@@ -6,9 +6,7 @@ function AddPlace({ navigation }) {
     console.log(place);
     await insertPlace(place);
 
-    navigation.navigate("AllPlaces", {
-      place,
-    });
+    navigation.navigate("AllPlaces");
   };
 
   return <PlaceForm onCreatePlace={createPlaceHandler} />;
