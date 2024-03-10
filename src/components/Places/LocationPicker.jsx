@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Alert, Image, Text } from "react-native";
+import { View, Alert, Image, Text, ActivityIndicator } from "react-native";
 import {
   useNavigation,
   useRoute,
@@ -15,6 +15,7 @@ import OutlinedButton from "../UI/OutlinedButton";
 import { getAddress, getMapPreview } from "../../../util/location";
 
 function LocationPicker({ onPickLocation }) {
+  const [mapIsLoading, setMapIsLoading] = useState(false);
   const [pickedLocation, setPickedLocation] = useState(null);
   const isFocused = useIsFocused(); // As the screens stack over each other, we use this hook to update
 
@@ -74,13 +75,16 @@ function LocationPicker({ onPickLocation }) {
       return;
     }
 
+    setMapIsLoading(true);
     const location = await getCurrentPositionAsync();
     setPickedLocation({
       lat: location.coords.latitude,
       lng: location.coords.longitude,
     });
-    console.log(location);
+    setMapIsLoading(false);
+    // console.log(location);
   };
+
   const pickOnMapHandler = () => {
     navigation.navigate("Map");
   };
@@ -88,8 +92,11 @@ function LocationPicker({ onPickLocation }) {
   return (
     <View>
       <View className="my-2 h-[200px] w-[100%] items-center justify-center rounded bg-primary-100">
-        {!pickedLocation && <Text className="">No location selected yet</Text>}
-        {pickedLocation && (
+        {mapIsLoading && <ActivityIndicator size={"large"} />}
+        {!mapIsLoading && !pickedLocation && (
+          <Text className="">No location selected yet</Text>
+        )}
+        {!mapIsLoading && pickedLocation && (
           <Image
             className="h-[100%] w-[100%]"
             source={{
@@ -102,6 +109,7 @@ function LocationPicker({ onPickLocation }) {
           />
         )}
       </View>
+
       <View className="flex-row items-center justify-around">
         <OutlinedButton icon="location" onPress={getLocationHandler}>
           Locate User

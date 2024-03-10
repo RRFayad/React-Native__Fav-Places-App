@@ -33,7 +33,13 @@ export const insertPlace = async (place) => {
     database.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
-        [place.title, place.imageUri, place.address, place.lat, place.lng],
+        [
+          place.title,
+          place.imageUri,
+          place.address,
+          place.location.lat,
+          place.location.lng,
+        ],
         (_, result) => {
           console.log(result);
           resolve(result);

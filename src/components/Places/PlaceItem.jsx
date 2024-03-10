@@ -11,11 +11,14 @@ function PlaceItem({ place, onSelect: selectHandler }) {
         source={{ uri: place.imageUri }}
         className="h-[100%] w-[100%] flex-1"
       />
+
       <View className="flex-2 rounded-l-md p-3">
         <Text className="text-lg font-bold text-gray-700">
           {place.title || "Custom Place"}
         </Text>
-        <Text className="text-xs text-gray-700">{place.address}</Text>
+        <Text className="max-w-[60vw] text-xs text-gray-700">
+          {place.address}
+        </Text>
       </View>
     </Pressable>
   );
