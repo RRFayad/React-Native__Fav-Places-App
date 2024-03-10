@@ -1,15 +1,36 @@
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
+
 import AllPlaces from "./src/screens/AllPlaces";
 import AddPlace from "./src/screens/AddPlace";
+import Map from "./src/screens/Map";
 import IconButton from "./src/components/UI/IconButton";
 import { Colors } from "./util/colors";
-import Map from "./src/screens/Map";
+import { init } from "./util/database";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  useEffect(() => {
+    const initializeDb = async () => {
+      // Max didn't do this, but I believe he did'nt handle the possible error
+      try {
+        await init();
+        setDbInitialized(true);
+        await SplashScreen.hideAsync();
+      } catch (error) {
+        console.log("Db init failed:", error);
+      }
+    };
+    SplashScreen.preventAutoHideAsync();
+    initializeDb();
+  }, []);
+
   return (
     <>
       <StatusBar style="dark" />
