@@ -1,7 +1,10 @@
 import { FlatList, View, Text } from "react-native";
 import PlaceItem from "./PlaceItem";
+import { useNavigation } from "@react-navigation/native";
 
 function PlacesList({ places }) {
+  const navigation = useNavigation();
+
   return (
     <>
       {(!places || places.length === 0) && (
@@ -15,7 +18,14 @@ function PlacesList({ places }) {
         <FlatList
           data={places}
           key={(place) => place.id}
-          renderItem={({ item }) => <PlaceItem place={item} />}
+          renderItem={({ item }) => (
+            <PlaceItem
+              place={item}
+              onSelect={(id) =>
+                navigation.navigate("PlaceDetails", { placeId: id })
+              }
+            />
+          )}
           className="m-6"
         />
       )}

@@ -84,6 +84,34 @@ export const fetchAllPlaces = async () => {
   return promise;
 };
 
+export const fetchPlaceDetails = async (id) => {
+  const promise = new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM places WHERE id = ?`, // SQL QUERY (use "?" for each value)
+        [id], // SQL Payload (one for each ? in the query)
+        (_, result) => {
+          // console.log(result.rows._array[0]);
+          const dbPlace = result.rows._array[0];
+          const place = new Place(
+            dbPlace.title,
+            dbPlace.imageUri,
+            {
+              address: dbPlace.address,
+              lat: dbPlace.lat,
+              lng: dbPlace.lng,
+            },
+            dbPlace.id,
+          );
+          resolve(place);
+        },
+        (_, error) => reject(error), // Promise reject callback  - if there's an err *the blank ("_") suggests that I must have a 1st arg, but I don't wanna use it
+      );
+    });
+  });
+  return promise;
+};
+
 /*  
 export const crudFunction = async (args) => {
   const promise = new Promise((resolve, reject) => {

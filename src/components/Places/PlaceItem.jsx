@@ -1,9 +1,10 @@
 import { View, Image, Pressable, Text } from "react-native";
 
 function PlaceItem({ place, onSelect: selectHandler }) {
+  // console.log(place);
   return (
     <Pressable
-      onPress={selectHandler}
+      onPress={() => selectHandler(place.id)}
       className="my-3 h-20 flex-row items-start rounded-md bg-primary-500 shadow shadow-black active:opacity-90"
       style={{ elevation: 2 }}
     >

@@ -3,17 +3,24 @@ import { Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import IconButton from "../components/UI/IconButton";
 
-function Map({ navigation }) {
-  const [selectedLocation, setSelectedLocation] = useState();
+function Map({ navigation, route }) {
+  const initialLocation = route.params
+    ? { lat: route.params.initialLat, lng: route.params.initialLng }
+    : null;
+
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
 
   const region = {
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: initialLocation ? initialLocation.lat : 37.78,
+    longitude: initialLocation ? initialLocation.lng : -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
 
   const selectLocationHandler = (event) => {
+    if (initialLocation) {
+      return;
+    }
     const { latitude, longitude } = event.nativeEvent.coordinate;
 
     setSelectedLocation({ latitude, longitude });
@@ -28,18 +35,20 @@ function Map({ navigation }) {
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({ tintColor }) => (
-        <IconButton
-          onPress={savePickedLocationHandler}
-          color={tintColor}
-          icon={"bookmark"}
-          size={24}
-        >
-          Save
-        </IconButton>
-      ),
-    });
+    if (!initialLocation) {
+      navigation.setOptions({
+        headerRight: ({ tintColor }) => (
+          <IconButton
+            onPress={savePickedLocationHandler}
+            color={tintColor}
+            icon={"bookmark"}
+            size={24}
+          >
+            Save
+          </IconButton>
+        ),
+      });
+    }
   }, [navigation, savePickedLocationHandler]);
 
   return (
@@ -49,7 +58,13 @@ function Map({ navigation }) {
       onPress={selectLocationHandler}
     >
       {selectedLocation && (
-        <Marker title="pickedLocation" coordinate={selectedLocation}></Marker>
+        <Marker
+          title="pickedLocation"
+          coordinate={{
+            latitude: selectedLocation.lat,
+            longitude: selectedLocation.lng,
+          }}
+        ></Marker>
       )}
     </MapView>
   );
